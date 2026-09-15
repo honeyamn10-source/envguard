@@ -1,0 +1,83 @@
+name: Bug report
+description: Report a bug or unexpected behaviour in envguard
+title: "bug: "
+labels: ["bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please fill in as much as you can.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `envguard --version`
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: python
+    attributes:
+      label: Python version
+      options:
+        - "3.9"
+        - "3.10"
+        - "3.11"
+        - "3.12"
+        - "3.13"
+        - other
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Include the exact command(s) and the smallest input that triggers the
+        problem. Redact any real secrets before pasting.
+      placeholder: |
+        1. Create a file `sample.env` containing ...
+        2. Run `envguard check sample.env`
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      placeholder: "What did you expect to happen?"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      placeholder: "What actually happened?"
+    validations:
+      required: true
+  - type: input
+    id: exit
+    attributes:
+      label: Exit code observed
+      description: "0, 1 or 2"
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checks
+      options:
+        - label: I searched existing issues for this bug
+          required: true
+        - label: I checked the README for the intended behaviour
+          required: false

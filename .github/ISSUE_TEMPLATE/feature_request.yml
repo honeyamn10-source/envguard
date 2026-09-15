@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest an idea for envguard
+title: "feat: "
+labels: ["enhancement"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe the problem you are solving, not just the solution.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: A short description of the workflow pain or security gap.
+      placeholder: "Right now envguard cannot ..."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How you imagine the feature working. Example CLI/flags are welcome.
+      placeholder: |
+        e.g. `envguard scan . --format sarif`
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any workarounds or other tools you tried.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: I understand envguard must stay standard-library-only
+          required: true
+        - label: I searched existing issues and the roadmap for this idea
+          required: true
