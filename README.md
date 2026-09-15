@@ -4,6 +4,7 @@ Audit your `.env` files and scan your codebase for leaked secrets — before it'
 
 [![GitHub stars](https://img.shields.io/github/stars/honeyamn10-source/envguard?style=flat-square)](https://github.com/honeyamn10-source/envguard/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/honeyamn10-source/envguard?style=flat-square)](https://github.com/honeyamn10-source/envguard/network)
+[![CI](https://github.com/honeyamn10-source/envguard/actions/workflows/ci.yml/badge.svg)](https://github.com/honeyamn10-source/envguard/actions/workflows/ci.yml)
 [![Python version](https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 
