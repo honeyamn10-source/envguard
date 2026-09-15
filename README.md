@@ -50,6 +50,23 @@ Every secret you commit today becomes a credential you must rotate tomorrow. `en
 - **Low noise.** Entropy gating, placeholder suppression and gitignore awareness keep findings actionable instead of fearsome.
 - **Two tools, one binary.** Environment hygiene and secret scanning share the same fast engine.
 
+## How scanning works
+
+```mermaid
+flowchart LR
+    A[Repo tree] --> B{gitignore &<br/>.envguard-ignore}
+    B -- skip --> X[Ignored]
+    B -- keep --> C{Size & text<br/>filter}
+    C -- skip --> Y[Binary / >1MB]
+    C -- keep --> D[Line by line]
+    D --> E[Detector match<br/>14 builtin rules]
+    E -- no --> F[Safe]
+    E -- yes --> G{Entropy gate &<br/>placeholder check}
+    G -- placeholder --> F
+    G -- real secret --> H[Finding]
+    H --> I[Summary + exit 1]
+```
+
 ## Install
 
 ```console
