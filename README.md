@@ -54,17 +54,17 @@ Every secret you commit today becomes a credential you must rotate tomorrow. `en
 
 ```mermaid
 flowchart LR
-    A[Repo tree] --> B{gitignore &<br/>.envguard-ignore}
+    A[Repo tree] --> B{gignore filter}
     B -- skip --> X[Ignored]
-    B -- keep --> C{Size & text<br/>filter}
-    C -- skip --> Y[Binary / >1MB]
-    C -- keep --> D[Line by line]
-    D --> E[Detector match<br/>14 builtin rules]
-    E -- no --> F[Safe]
-    E -- yes --> G{Entropy gate &<br/>placeholder check}
-    G -- placeholder --> F
-    G -- real secret --> H[Finding]
-    H --> I[Summary + exit 1]
+    B -- keep --> C{text filter}
+    C -- skip --> Y[Binary or large]
+    C -- keep --> D[scan lines]
+    D --> E{detector match}
+    E -- no --> F[safe]
+    E -- yes --> G{entropy gate}
+    G -- weak --> F
+    G -- strong --> H[finding]
+    H --> I[summary + exit 1]
 ```
 
 ## Install
