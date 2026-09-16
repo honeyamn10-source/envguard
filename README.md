@@ -4,6 +4,7 @@ Audit your `.env` files and scan your codebase for leaked secrets — before it'
 
 [![GitHub stars](https://img.shields.io/github/stars/honeyamn10-source/envguard?style=flat-square)](https://github.com/honeyamn10-source/envguard/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/honeyamn10-source/envguard?style=flat-square)](https://github.com/honeyamn10-source/envguard/network)
+[![CI](https://github.com/honeyamn10-source/envguard/actions/workflows/ci.yml/badge.svg)](https://github.com/honeyamn10-source/envguard/actions/workflows/ci.yml)
 [![Python version](https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 
@@ -48,6 +49,23 @@ Every secret you commit today becomes a credential you must rotate tomorrow. `en
 - **Zero dependencies.** It runs on a bare Python interpreter and installs in milliseconds.
 - **Low noise.** Entropy gating, placeholder suppression and gitignore awareness keep findings actionable instead of fearsome.
 - **Two tools, one binary.** Environment hygiene and secret scanning share the same fast engine.
+
+## How scanning works
+
+```mermaid
+flowchart LR
+    A[Repo tree] --> B{gignore filter}
+    B -- skip --> X[Ignored]
+    B -- keep --> C{text filter}
+    C -- skip --> Y[Binary or large]
+    C -- keep --> D[scan lines]
+    D --> E{detector match}
+    E -- no --> F[safe]
+    E -- yes --> G{entropy gate}
+    G -- weak --> F
+    G -- strong --> H[finding]
+    H --> I[summary + exit 1]
+```
 
 ## Install
 
