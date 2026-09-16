@@ -1,0 +1,15 @@
+- id: envguard-check
+  name: envguard check
+  description: Lint a .env file against its .env.example
+  entry: envguard check
+  language: python
+  types: [text]
+  files: (^|/)\.env$
+
+- id: envguard-scan
+  name: envguard scan
+  description: Scan the staged tree for leaked secrets
+  entry: envguard scan
+  language: python
+  types: [text]
+  pass_filenames: false

@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "envguard"
+version = "0.1.0"
+description = "Audit .env files and scan your codebase for leaked secrets before it's too late."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Bittu Sharma" }]
+keywords = ["secrets", "security", "audit", "dotenv", "lint", "scanner"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.scripts]
+envguard = "envguard.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/honeyamn10-source/envguard"
+Repository = "https://github.com/honeyamn10-source/envguard"
+Issues = "https://github.com/honeyamn10-source/envguard/issues"
+
+[tool.setuptools.packages.find]
+include = ["envguard*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
