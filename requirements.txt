@@ -1,5 +1,0 @@
-# envguard has zero runtime dependencies (stdlib only, see pyproject.toml).
-# This file pins the development toolchain so CI and local runs are reproducible.
-# Verify after changes: ruff check . && pytest
-pytest==9.1.1
-ruff==0.16.8
