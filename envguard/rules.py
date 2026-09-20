@@ -1,8 +1,10 @@
 """Builtin secret detector ruleset."""
+from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
-from typing import Callable, List, Optional, Pattern, Set, Tuple
+from dataclasses import dataclass
+from re import Pattern
+from typing import Callable
 
 from envguard.entropy import is_high_entropy
 
@@ -56,7 +58,7 @@ class RawMatch:
     start: int
     end: int
     value: str
-    line: Optional[int] = None
+    line: int | None = None
 
 
 @dataclass(frozen=True)
@@ -76,8 +78,8 @@ class Rule:
     severity: str
     description: str
     pattern: str
-    matcher: Callable[[str], List[RawMatch]]
-    validator: Optional[Callable[[str], bool]] = None
+    matcher: Callable[[str], list[RawMatch]]
+    validator: Callable[[str], bool] | None = None
 
     def __post_init__(self) -> None:
         """Validate the rule at construction time."""
@@ -85,7 +87,7 @@ class Rule:
             raise ValueError(f"unknown severity {self.severity!r} for rule {self.name!r}")
 
 
-def regex_matcher(pattern: str, flags: int = 0, capture_group: Optional[int] = None) -> Callable[[str], List[RawMatch]]:
+def regex_matcher(pattern: str, flags: int = 0, capture_group: int | None = None) -> Callable[[str], list[RawMatch]]:
     """Build a matcher that runs a compiled regex over the whole text.
 
     Args:
@@ -98,8 +100,8 @@ def regex_matcher(pattern: str, flags: int = 0, capture_group: Optional[int] = N
     """
     compiled: Pattern = re.compile(pattern, flags)
 
-    def matcher(text: str) -> List[RawMatch]:
-        results: List[RawMatch] = []
+    def matcher(text: str) -> list[RawMatch]:
+        results: list[RawMatch] = []
         for match in compiled.finditer(text):
             value = match.group(capture_group) if capture_group is not None else match.group(0)
             results.append(
@@ -114,7 +116,7 @@ def regex_matcher(pattern: str, flags: int = 0, capture_group: Optional[int] = N
     return matcher
 
 
-def entropy_matcher(kind: str) -> Callable[[str], List[RawMatch]]:
+def entropy_matcher(kind: str) -> Callable[[str], list[RawMatch]]:
     """Build a matcher for one of the high-entropy detectors.
 
     Tokens are only reported when a credential-like key name appears on the
@@ -129,9 +131,9 @@ def entropy_matcher(kind: str) -> Callable[[str], List[RawMatch]]:
         A matcher callable used by the scanning engine.
     """
 
-    def matcher(text: str) -> List[RawMatch]:
-        results: List[RawMatch] = []
-        strong_spans: List[Tuple[int, int]] = []
+    def matcher(text: str) -> list[RawMatch]:
+        results: list[RawMatch] = []
+        strong_spans: list[tuple[int, int]] = []
         if kind == "base64":
             for token_start, token_end in _STRONG_GUARD_PAIRS:
                 if _STRONG_GUARD_RE[token_start].search(text) is not None:
@@ -159,7 +161,7 @@ def entropy_matcher(kind: str) -> Callable[[str], List[RawMatch]]:
     return matcher
 
 
-def _mark_span(spans: List[Tuple[int, int]], span: Tuple[int, int]) -> None:
+def _mark_span(spans: list[tuple[int, int]], span: tuple[int, int]) -> None:
     """Append a span, merging with the previous span when overlapping.
 
     Args:
@@ -173,7 +175,7 @@ def _mark_span(spans: List[Tuple[int, int]], span: Tuple[int, int]) -> None:
         spans.append(span)
 
 
-def _overlaps(spans: List[Tuple[int, int]], start: int, end: int) -> bool:
+def _overlaps(spans: list[tuple[int, int]], start: int, end: int) -> bool:
     """Check whether an interval overlaps any span.
 
     Args:
@@ -235,7 +237,7 @@ _STRONG_GUARD_PATTERNS = {
 }
 
 
-def _compile_guard_pair(name: str, source: str) -> Tuple[str, Pattern]:
+def _compile_guard_pair(name: str, source: str) -> tuple[str, Pattern]:
     """Compile a guard regex keyed by detector name.
 
     Args:
@@ -248,13 +250,13 @@ def _compile_guard_pair(name: str, source: str) -> Tuple[str, Pattern]:
     return (name, re.compile(source, re.IGNORECASE))
 
 
-_STRONG_GUARD_PAIRS: List[Tuple[str, Pattern]] = [
+_STRONG_GUARD_PAIRS: list[tuple[str, Pattern]] = [
     _compile_guard_pair(name, source) for name, source in _STRONG_GUARD_PATTERNS.items()
 ]
 _STRONG_GUARD_RE: dict = {name: compiled for name, compiled in _STRONG_GUARD_PAIRS}
 
 
-def extract_strong_spans(text: str, ordered_names: List[str]) -> List[Tuple[int, int]]:
+def extract_strong_spans(text: str, ordered_names: list[str]) -> list[tuple[int, int]]:
     """Return the spans of strong detectors present in a text.
 
     Args:
@@ -264,7 +266,7 @@ def extract_strong_spans(text: str, ordered_names: List[str]) -> List[Tuple[int,
     Returns:
         Merged, sorted non-overlapping spans.
     """
-    spans: List[Tuple[int, int]] = []
+    spans: list[tuple[int, int]] = []
     for name in ordered_names:
         compiled = _STRONG_GUARD_RE.get(name)
         if compiled is None:
@@ -386,7 +388,7 @@ HIGH_ENTROPY_BASE64_RULE = Rule(
     matcher=entropy_matcher("base64"),
 )
 
-BUILTIN_RULES: List[Rule] = [
+BUILTIN_RULES: list[Rule] = [
     AWS_ACCESS_KEY_ID_RULE,
     AWS_SECRET_ACCESS_KEY_RULE,
     GITHUB_PAT_RULE,
@@ -454,7 +456,7 @@ def mask_secret(value: str) -> str:
     return cleaned[:4] + "*" * 4 + cleaned[-4:]
 
 
-def validate_severity(csv_value: Optional[str]) -> Optional[Set[str]]:
+def validate_severity(csv_value: str | None) -> set[str] | None:
     """Parse a ``--severity`` value into a set of allowed severities.
 
     Args:
@@ -477,7 +479,7 @@ def validate_severity(csv_value: Optional[str]) -> Optional[Set[str]]:
     return names
 
 
-def severity_pass(severity: str, allowed: Optional[Set[str]]) -> bool:
+def severity_pass(severity: str, allowed: set[str] | None) -> bool:
     """Check whether a finding's severity passes a filter.
 
     Args:

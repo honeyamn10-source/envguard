@@ -2,8 +2,6 @@
 
 import json
 
-import pytest
-
 from envguard.check import CheckOptions, lint, lint_texts, parse_env, to_json
 from envguard.cli import cli
 

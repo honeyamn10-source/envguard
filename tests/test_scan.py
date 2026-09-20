@@ -6,7 +6,7 @@ import pytest
 
 from envguard.cli import cli
 from envguard.rules import BUILTIN_RULES, looks_like_placeholder
-from envguard.scan import Finding, ScanError, scan_path
+from envguard.scan import ScanError, scan_path
 
 HEX_SECRET = "300bbb6dcfea31a3e22a1de84d12d295a51cb0c341de5a410577ac8e5436b475"
 B64_SECRET = "piA8CnkArR2YjzO1QxfeQODGz0idDvgywiN8bVGQeY/o0lYa"
@@ -74,14 +74,14 @@ def test_finds_github_pat_new_format(make_tree, tmp_path):
 
 def test_finds_slack_token(make_tree, tmp_path):
     slack = _slack_token()
-    result = scan_env(make_tree, tmp_path, "SLACK={}\n".format(slack))
+    result = scan_env(make_tree, tmp_path, f"SLACK={slack}\n")
     assert result.findings[0].detector == "slack-token"
     assert result.findings[0].severity == "high"
 
 
 def test_finds_stripe_key(make_tree, tmp_path):
     stripe = _stripe_key()
-    result = scan_env(make_tree, tmp_path, "STRIPE_KEY={}\n".format(stripe))
+    result = scan_env(make_tree, tmp_path, f"STRIPE_KEY={stripe}\n")
     assert result.findings[0].detector == "stripe-key"
     assert result.findings[0].severity == "critical"
 
@@ -106,15 +106,7 @@ def test_finds_openssh_private_key(make_tree, tmp_path):
 
 
 def test_finds_connection_strings(make_tree, tmp_path):
-    content = "\n".join(
-        [
-            "PG=postgres://user:pw@host/db",
-            "REDIS=redis://user:pw@host:6379",
-            "MYSQL=mysql://user:pw@host/db",
-            "MONGO=mongodb://user:pw@host/db",
-            "MONGO_SRV=mongodb+srv://user:pw@host/db",
-        ]
-    ) + "\n"
+    content = "PG=postgres://user:pw@host/db\nREDIS=redis://user:pw@host:6379\nMYSQL=mysql://user:pw@host/db\nMONGO=mongodb://user:pw@host/db\nMONGO_SRV=mongodb+srv://user:pw@host/db" + "\n"
     result = scan_env(make_tree, tmp_path, content)
     found = detectors(result)
     assert {"postgresql-url", "redis-url", "mysql-url", "mongodb-url"} <= found
@@ -377,6 +369,6 @@ def test_all_rules_can_match_at_least_once():
 
 
 def test_scan_finding_line_number_precision(make_tree, tmp_path):
-    content = "line one\nMAIN_TOKEN={}\nline three\n".format(_slack_token())
+    content = f"line one\nMAIN_TOKEN={_slack_token()}\nline three\n"
     result = scan_env(make_tree, tmp_path, content)
     assert {finding.line for finding in result.findings} == {2}

@@ -1,9 +1,10 @@
 """The codebase secret scanning engine."""
+from __future__ import annotations
 
 import os
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence, Set, Tuple
 
 from envguard.ignore import (
     BUILTIN_IGNORE_PATTERNS,
@@ -12,7 +13,13 @@ from envguard.ignore import (
     is_suppressed,
     parse_envguard_ignore,
 )
-from envguard.rules import BUILTIN_RULES, Rule, looks_like_placeholder, mask_secret, severity_pass
+from envguard.rules import (
+    BUILTIN_RULES,
+    Rule,
+    looks_like_placeholder,
+    mask_secret,
+    severity_pass,
+)
 
 MAX_FILE_BYTES = 1_000_000
 _BINARY_PROBE_BYTES = 8192
@@ -57,7 +64,7 @@ class ScanResult:
     """
 
     root: str
-    findings: List[Finding] = field(default_factory=list)
+    findings: list[Finding] = field(default_factory=list)
     files_scanned: int = 0
     files_skipped: int = 0
     truncated: bool = False
@@ -67,24 +74,24 @@ class ScanResult:
         """Whether the scan produced no findings."""
         return not self.findings
 
-    def counts_by_severity(self) -> Dict[str, int]:
+    def counts_by_severity(self) -> dict[str, int]:
         """Return finding counts grouped by severity.
 
         Returns:
             Mapping of severity name to finding count.
         """
-        counts: Dict[str, int] = {}
+        counts: dict[str, int] = {}
         for finding in self.findings:
             counts[finding.severity] = counts.get(finding.severity, 0) + 1
         return counts
 
-    def counts_by_detector(self) -> Dict[str, int]:
+    def counts_by_detector(self) -> dict[str, int]:
         """Return finding counts grouped by detector.
 
         Returns:
             Mapping of detector name to finding count.
         """
-        counts: Dict[str, int] = {}
+        counts: dict[str, int] = {}
         for finding in self.findings:
             counts[finding.detector] = counts.get(finding.detector, 0) + 1
         return counts
@@ -102,7 +109,7 @@ def _is_binary(data: bytes) -> bool:
     return b"\x00" in data[:_BINARY_PROBE_BYTES]
 
 
-def scan_text(text: str, relpath: str, rules: Sequence[Rule] = BUILTIN_RULES) -> List[Finding]:
+def scan_text(text: str, relpath: str, rules: Sequence[Rule] = BUILTIN_RULES) -> list[Finding]:
     """Scan one text buffer with the given rules.
 
     Args:
@@ -113,7 +120,7 @@ def scan_text(text: str, relpath: str, rules: Sequence[Rule] = BUILTIN_RULES) ->
     Returns:
         Findings sorted by line number.
     """
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     for rule in rules:
         for raw_match in rule.matcher(text):
             if looks_like_placeholder(raw_match.value):
@@ -137,7 +144,7 @@ def scan_text(text: str, relpath: str, rules: Sequence[Rule] = BUILTIN_RULES) ->
     return findings
 
 
-def _read_envguard_ignore(root: Path) -> List[EnvguardIgnoreRule]:
+def _read_envguard_ignore(root: Path) -> list[EnvguardIgnoreRule]:
     """Parse a root-level ``.envguard-ignore`` file when present.
 
     Args:
@@ -173,7 +180,7 @@ def _build_matcher(root: Path) -> IgnoreMatcher:
     return matcher
 
 
-def _load_file(full_path: Path, relpath: str, ignored: List[EnvguardIgnoreRule]):
+def _load_file(full_path: Path, relpath: str, ignored: list[EnvguardIgnoreRule]):
     """Load a file or explain why it must be skipped.
 
     Args:
@@ -199,8 +206,8 @@ def _load_file(full_path: Path, relpath: str, ignored: List[EnvguardIgnoreRule])
 
 def scan_path(
     target: Path,
-    severity: Optional[Set[str]] = None,
-    max_findings: Optional[int] = None,
+    severity: set[str] | None = None,
+    max_findings: int | None = None,
 ) -> ScanResult:
     """Scan a file or a whole tree for leaked secrets.
 
@@ -247,7 +254,7 @@ def scan_path(
                 continue
             full_path = Path(dirpath) / filename
             try:
-                text, skip_reason = _load_file(full_path, file_rel, ignore_rules)
+                text, _skip_reason = _load_file(full_path, file_rel, ignore_rules)
             except (OSError, TypeError) as error:
                 raise ScanError(f"could not read {file_rel}: {error}") from error
             if text is None:
@@ -274,8 +281,8 @@ def scan_path(
 
 def _scan_single_file(
     target: Path,
-    severity: Optional[Set[str]] = None,
-    max_findings: Optional[int] = None,
+    severity: set[str] | None = None,
+    max_findings: int | None = None,
 ) -> ScanResult:
     """Scan one explicit file path.
 

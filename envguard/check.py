@@ -1,12 +1,13 @@
 """The ``.env`` linting engine."""
+from __future__ import annotations
 
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence
 
 _KEY_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_.@-]*$")
-_QUOTED_VALUE_RE = re.compile(r"^([\"'])(.*)\1\s*(?:#.*)?$", re.S)
+_QUOTED_VALUE_RE = re.compile(r"^([\"'])(.*)\1\s*(?:#.*)?$", re.DOTALL)
 _EXPORT_PREFIX = "export "
 _COMMENTED_KEY_RE = re.compile(r"^#\s*(?:export\s+)?[A-Za-z_][A-Za-z0-9_.@-]*\s*=")
 
@@ -40,7 +41,7 @@ class CheckIssue:
     """
 
     code: str
-    line: Optional[int]
+    line: int | None
     severity: str
     message: str
 
@@ -55,8 +56,8 @@ class CheckOptions:
         strict: Upgrade every warning to an error in the result.
     """
 
-    allow: List[str] = field(default_factory=list)
-    require: List[str] = field(default_factory=list)
+    allow: list[str] = field(default_factory=list)
+    require: list[str] = field(default_factory=list)
     strict: bool = False
 
 
@@ -73,8 +74,8 @@ class CheckResult:
 
     env_path: str
     example_path: str
-    issues: List[CheckIssue] = field(default_factory=list)
-    keys: List[str] = field(default_factory=list)
+    issues: list[CheckIssue] = field(default_factory=list)
+    keys: list[str] = field(default_factory=list)
 
     @property
     def ok(self) -> bool:
@@ -92,7 +93,7 @@ class CheckResult:
         return sum(1 for issue in self.issues if issue.severity == "error")
 
 
-def _split_lines(text: str) -> List[str]:
+def _split_lines(text: str) -> list[str]:
     """Split text into lines preserving them for parsing.
 
     Args:
@@ -101,12 +102,11 @@ def _split_lines(text: str) -> List[str]:
     Returns:
         The list of lines.
     """
-    if text.endswith("\n"):
-        text = text[:-1]
+    text = text.removesuffix("\n")
     return text.split("\n")
 
 
-def parse_env(text: str) -> Dict[str, EnvEntry]:
+def parse_env(text: str) -> dict[str, EnvEntry]:
     """Parse dotenv content into its key/value entries.
 
     Duplicate keys are resolved last-value-wins. Malformed lines are skipped
@@ -118,10 +118,10 @@ def parse_env(text: str) -> Dict[str, EnvEntry]:
     Returns:
         A mapping of key to its winning ``EnvEntry``.
     """
-    entries: Dict[str, EnvEntry] = {}
+    entries: dict[str, EnvEntry] = {}
     for line_number, raw in enumerate(_split_lines(text), start=1):
         content = raw.strip()
-        if not content or content.startswith("#") or content.startswith(";"):
+        if not content or content.startswith(("#", ";")):
             continue
         if _COMMENTED_KEY_RE.match(raw):
             continue
@@ -154,7 +154,7 @@ def _parse_value(value_raw: str):
     return stripped, False
 
 
-def lint_texts(env_text: str, example_text: str, options: Optional[CheckOptions] = None) -> List[CheckIssue]:
+def lint_texts(env_text: str, example_text: str, options: CheckOptions | None = None) -> list[CheckIssue]:
     """Lint env content against example content without touching the filesystem.
 
     Args:
@@ -169,17 +169,17 @@ def lint_texts(env_text: str, example_text: str, options: Optional[CheckOptions]
     env_entries = parse_env(env_text)
     example_entries = parse_env(example_text)
     allow_set = set(opts.allow)
-    issues: List[CheckIssue] = []
+    issues: list[CheckIssue] = []
 
-    counts: Dict[str, int] = {}
-    lines_per_key: Dict[str, List[int]] = {}
+    counts: dict[str, int] = {}
+    lines_per_key: dict[str, list[int]] = {}
 
     for line_number, raw in enumerate(_split_lines(env_text), start=1):
         content = raw.strip()
         if not content:
             continue
         stripped_raw = raw.lstrip()
-        if content.startswith("#") or content.startswith(";"):
+        if content.startswith(("#", ";")):
             commented = _COMMENTED_KEY_RE.match(stripped_raw)
             if commented:
                 name = commented.group(0).lstrip("#").strip()
@@ -305,7 +305,7 @@ def lint_texts(env_text: str, example_text: str, options: Optional[CheckOptions]
     )
 
 
-def lint(env_path: Path, example_path: Path, options: Optional[CheckOptions] = None) -> CheckResult:
+def lint(env_path: Path, example_path: Path, options: CheckOptions | None = None) -> CheckResult:
     """Lint one ``.env`` file against one example file.
 
     Args:

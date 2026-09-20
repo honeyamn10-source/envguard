@@ -1,10 +1,10 @@
 """Command-line entry point for envguard."""
+from __future__ import annotations
 
 import argparse
 import json
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 from envguard import __version__
 from envguard.check import CheckOptions, format_result, lint, to_json
@@ -59,7 +59,7 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _resolve_check_paths(path: Path, example: Optional[Path]):
+def _resolve_check_paths(path: Path, example: Path | None):
     """Resolve the env file and example file to compare.
 
     Args:
@@ -148,7 +148,7 @@ def run_scan(args: argparse.Namespace) -> int:
     return 0 if result.ok else 1
 
 
-def cli(argv: Optional[List[str]] = None) -> int:
+def cli(argv: list[str] | None = None) -> int:
     """Run the CLI and return its exit code.
 
     Args:

@@ -1,8 +1,8 @@
 """Gitignore-style ignore matching and ``.envguard-ignore`` parsing."""
+from __future__ import annotations
 
 import fnmatch
 from dataclasses import dataclass
-from typing import List, Optional
 
 BUILTIN_IGNORE_PATTERNS = [
     ".git/",
@@ -60,9 +60,9 @@ class IgnoreMatcher:
 
     def __init__(self) -> None:
         """Initialise an empty matcher."""
-        self._rules: List[IgnoreRule] = []
+        self._rules: list[IgnoreRule] = []
 
-    def add(self, patterns: List[str], base: str = "") -> None:
+    def add(self, patterns: list[str], base: str = "") -> None:
         """Add patterns, optionally scoped to a repo-relative base directory.
 
         Args:
@@ -75,7 +75,7 @@ class IgnoreMatcher:
                 self._rules.append(rule)
 
     @staticmethod
-    def _parse(raw: str, base: str) -> Optional[IgnoreRule]:
+    def _parse(raw: str, base: str) -> IgnoreRule | None:
         """Normalise one raw pattern line into an ``IgnoreRule``.
 
         Args:
@@ -185,10 +185,10 @@ class EnvguardIgnoreRule:
     """
 
     glob: str
-    detector: Optional[str] = None
+    detector: str | None = None
 
 
-def parse_envguard_ignore(text: str) -> List[EnvguardIgnoreRule]:
+def parse_envguard_ignore(text: str) -> list[EnvguardIgnoreRule]:
     """Parse ``.envguard-ignore`` content.
 
     Lines are one glob per line; ``file:detector`` ignores a specific
@@ -200,7 +200,7 @@ def parse_envguard_ignore(text: str) -> List[EnvguardIgnoreRule]:
     Returns:
         The parsed rules in declaration order.
     """
-    rules: List[EnvguardIgnoreRule] = []
+    rules: list[EnvguardIgnoreRule] = []
     for raw in text.splitlines():
         line = raw.strip()
         if not line or line.startswith("#"):
@@ -216,7 +216,7 @@ def parse_envguard_ignore(text: str) -> List[EnvguardIgnoreRule]:
     return rules
 
 
-def is_suppressed(relpath: str, detector: str, rules: List[EnvguardIgnoreRule]) -> bool:
+def is_suppressed(relpath: str, detector: str, rules: list[EnvguardIgnoreRule]) -> bool:
     """Check whether a finding should be suppressed by ignore rules.
 
     Args:

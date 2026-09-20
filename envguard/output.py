@@ -1,6 +1,5 @@
 """Human and JSON formatters for scan results."""
 
-from typing import Dict, List
 
 from envguard.rules import SEVERITY_ORDER
 from envguard.scan import ScanResult
@@ -18,7 +17,7 @@ def format_finding(finding) -> str:
     return f"{finding.path}:{finding.line}:{finding.severity}:{finding.detector}:{finding.description}"
 
 
-def _format_table(rows: List[str], title: str) -> str:
+def _format_table(rows: list[str], title: str) -> str:
     """Render a simple aligned two-column table.
 
     Args:

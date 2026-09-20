@@ -2,7 +2,6 @@
 
 import math
 import re
-from typing import Dict
 
 HEX_POOL_SIZE = 16
 BASE64_POOL_SIZE = 64
@@ -32,7 +31,7 @@ def shannon_entropy(text: str) -> float:
     if not text:
         return 0.0
     total = len(text)
-    counts: Dict[str, int] = {}
+    counts: dict[str, int] = {}
     for char in text:
         counts[char] = counts.get(char, 0) + 1
     return -sum((count / total) * math.log2(count / total) for count in counts.values())
