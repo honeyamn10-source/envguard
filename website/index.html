@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>envguard — stop secrets before they reach production</title>
+  <meta name="description" content="envguard is a zero-dependency Python CLI that audits .env files and scans repositories for leaked secrets — before they are committed or deployed.">
+  <meta name="keywords" content="secrets, secret scanning, env audit, dotenv, security, CLI, python, pre-commit, gitleaks alternative">
+  <meta name="author" content="Bittu Sharma">
+  <link rel="canonical" href="https://honeyamn10-source.github.io/envguard/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="envguard">
+  <meta property="og:title" content="envguard — stop secrets before they reach production">
+  <meta property="og:description" content="Audit .env files and scan your codebase for leaked credentials. Zero runtime dependencies, runs entirely on your machine.">
+  <meta property="og:url" content="https://honeyamn10-source.github.io/envguard/">
+  <meta property="og:image" content="https://honeyamn10-source.github.io/envguard/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="envguard — stop secrets before they reach production">
+  <meta name="twitter:description" content="Audit .env files and scan your codebase for leaked credentials. Zero runtime dependencies, runs entirely on your machine.">
+  <meta name="twitter:image" content="https://honeyamn10-source.github.io/envguard/og.png">
+  <meta name="twitter:creator" content="@honeyamn10-source">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#07090d">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="sitemap" type="application/xml" href="sitemap.xml">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "envguard",
+    "url": "https://honeyamn10-source.github.io/envguard/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "OS Independent (Python 3.9+)",
+    "description": "Zero-dependency Python CLI that audits .env files and scans repositories for leaked secrets.",
+    "author": { "@type": "Person", "name": "Bittu Sharma" },
+    "license": "https://github.com/honeyamn10-source/envguard/blob/main/LICENSE",
+    "codeRepository": "https://github.com/honeyamn10-source/envguard"
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="envguard home">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#22d3ee"/><text x="32" y="45" font-family="ui-monospace,Consolas,monospace" font-size="34" font-weight="700" fill="#0b0e14" text-anchor="middle">e</text></svg>
+        envguard
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#security">Security</a>
+        <a href="#install">Install</a>
+        <a href="#docs">Docs</a>
+        <a href="https://github.com/honeyamn10-source/envguard" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">☀️</button>
+      <button class="nav-burger" type="button" aria-expanded="false" aria-label="Toggle navigation">☰</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="hero-inner">
+            <span class="status"><span class="dot" aria-hidden="true"></span> v0.1.0 · MIT · zero runtime dependencies</span>
+            <h1>Stop secrets before they reach production.</h1>
+            <p class="lede">envguard audits environment files and scans repositories for exposed credentials — before they are committed or deployed. A single dependency-free Python CLI you run on your own machine.</p>
+            <div class="btn-row">
+              <a class="btn btn-primary" href="#install">Get started</a>
+              <a class="btn btn-ghost" href="https://github.com/honeyamn10-source/envguard" target="_blank" rel="noopener">View on GitHub</a>
+            </div>
+          </div>
+          <div class="term" role="img" aria-label="Terminal capture showing envguard scanning a repository and reporting leaked secrets">
+            <div class="term-bar"><i class="t1"></i><i class="t2"></i><i class="t3"></i><span>envguard scan .</span></div>
+            <div class="term-body">$ <span class="c1">envguard scan</span> .
+scanning /repo
+config/settings.env:2:<span class="c2">critical</span>:<span class="c1">aws-access-key-id</span>:AWS Access Key ID
+config/settings.env:3:<span class="c2">critical</span>:<span class="c1">aws-secret-access-key</span>:AWS Secret Access Key
+config/settings.env:4:<span class="c2">high</span>:<span class="c1">github-pat</span>:GitHub Personal Access Token
+config/settings.env:5:<span class="c2">high</span>:<span class="c1">slack-token</span>:Slack API token
+config/settings.env:7:<span class="c2">high</span>:<span class="c1">openai-api-key</span>:OpenAI API key
+config/settings.env:8:<span class="c2">high</span>:<span class="c1">mysql-url</span>:MySQL connection string…
+keys/test_key.pem:1:<span class="c2">critical</span>:<span class="c1">private-key</span>:Private key material
+
+Summary: 13 finding(s) across 5 file(s)
+severity  count
+<span class="dim">----------------</span>
+<span class="c2">critical</span>      3
+<span class="c2">high</span>          8
+<span class="c2">medium</span>        2
+<span class="ok">exit code 1 — findings reported</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ METRICS ============ -->
+    <section class="section section-soft">
+      <div class="wrap">
+        <div class="metrics" data-reveal>
+          <div class="metric"><b>14</b><span>built-in secret detectors</span></div>
+          <div class="metric"><b>0</b><span>runtime dependencies (stdlib only)</span></div>
+          <div class="metric"><b>3</b><span>severity-gated exit codes for CI</span></div>
+          <div class="metric"><b>2</b><span>pre-commit hooks included</span></div>
+          <div class="metric"><b>1 MB</b><span>per-file scan ceiling</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FEATURES ============ -->
+    <section class="section" id="features">
+      <div class="wrap">
+        <span class="eyebrow">Capabilities</span>
+        <h2>Two commands cover the two places secrets escape</h2>
+        <p class="lede">Every capability below is implemented in the codebase and exercised by the test suite.</p>
+        <div class="grid grid-3" style="margin-top:34px">
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">✓</span>
+            <h3>.env linting — <code>check</code></h3>
+            <p>Compare a real <code>.env</code> against its <code>.env.example</code>. Catches missing keys, extra unexplained keys, duplicates, commented-out keys, quoting pitfalls, malformed lines and empty required values.</p>
+            <div class="tag-row"><span class="tag">--strict</span><span class="tag">--allow</span><span class="tag">--require</span><span class="tag">--json</span></div>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">🛰️</span>
+            <h3>Repository secret scanning — <code>scan</code></h3>
+            <p>Walk the whole tree and flag likely leaked credentials line by line. Skips binary content and files over 1&nbsp;MB, so results stay fast and focused.</p>
+            <div class="tag-row"><span class="tag">--severity</span><span class="tag">--max-findings</span><span class="tag">--format human|json</span></div>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">🔐</span>
+            <h3>Named secret detectors</h3>
+            <p>AWS access &amp; secret keys, GitHub PATs, Slack tokens, Stripe live keys, OpenAI keys, private key material, and PostgreSQL/Redis/MySQL/MongoDB connection strings with embedded credentials.</p>
+            <div class="tag-row"><span class="tag">critical</span><span class="tag">high</span><span class="tag">medium</span><span class="tag">low</span></div>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">∑</span>
+            <h3>Entropy-gated generic detection</h3>
+            <p>Hex and base64 tokens next to credential-looking keys are scored with Shannon entropy plus a length-weighted score — so long, random strings are caught without flagging normal words.</p>
+            <div class="tag-row"><span class="tag">high-entropy-hex</span><span class="tag">high-entropy-base64</span></div>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">🚫</span>
+            <h3>Placeholder-aware</h3>
+            <p>Templates tell you where to put a key — that is not a leak. <code>&lt;...&gt;</code>, ellipses, <code>xxxx</code>, <code>changeme</code>, <code>YOUR_KEY_HERE</code> and demo words are never reported.</p>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">▤</span>
+            <h3>gitignore-aware traversal</h3>
+            <p>Respects <code>.gitignore</code>, <code>.git/info/exclude</code>, nested <code>.gitignore</code> files and built-in build/vendor dirs. A dedicated <code>.envguard-ignore</code> supports per-file and per-detector suppression.</p>
+            <div class="tag-row"><span class="tag">.envguard-ignore</span><span class="tag">glob:detector</span></div>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">🩹</span>
+            <h3>Masked findings</h3>
+            <p>The real secret is never printed. Findings display a masked preview like <code>AKIA****ABCD</code>. Secret values stay out of logs, terminals and CI output.</p>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">⛓</span>
+            <h3>CI-ready exit codes</h3>
+            <p><code>0</code> clean, <code>1</code> findings/issues, <code>2</code> usage or I/O error. Turn it into a gate in your pipeline and let machines decide, with human-readable output for you.</p>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">⌁</span>
+            <h3>Machine-readable JSON</h3>
+            <p>Both commands emit stable JSON (<code>--json</code> / <code>--format json</code>) with paths, line numbers, severities, detector names and masked secrets — ready for sarif or CI parsing.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="section section-soft" id="how">
+      <div class="wrap">
+        <span class="eyebrow">How it works</span>
+        <h2>From filesystem to a severity-gated decision</h2>
+        <div class="grid" style="grid-template-columns:1fr 1fr; gap:48px; align-items:start">
+          <ol class="steps" style="list-style:none;margin:0;padding:0">
+            <li class="step">
+              <span class="n" aria-hidden="true"></span>
+              <div><h3>Traverse with respect</h3><p>Walk the repository, honouring gitignore semantics and <code>.envguard-ignore</code>; skip binaries, oversized and vendored paths.</p></div>
+            </li>
+            <li class="step">
+              <span class="n" aria-hidden="true"></span>
+              <div><h3>Apply detectors</h3><p>Fourteen regex-and-context detectors run per line: named services first, entropy heuristics for random hex/base64 tokens.</p></div>
+            </li>
+            <li class="step">
+              <span class="n" aria-hidden="true"></span>
+              <div><h3>Filter noise</h3><p>Placeholder values and suppressed paths/detectors are dropped before anything is reported.</p></div>
+            </li>
+            <li class="step">
+              <span class="n" aria-hidden="true"></span>
+              <div><h3>Classify + mask</h3><p>Findings get a severity and a masked preview (<code>xxxx****zzzz</code>), then are sorted by path and line.</p></div>
+            </li>
+            <li class="step">
+              <span class="n" aria-hidden="true"></span>
+              <div><h3>Emit + exit</h3><p>Human or JSON report, plus an exit code your pipeline can enforce. <code>0</code> clean, <code>1</code> found, <code>2</code> error.</p></div>
+            </li>
+          </ol>
+          <div class="stack">
+            <div class="note"><strong>Same engine, two surfaces.</strong> <code>check</code> compares parsed dotenv key/value entries; <code>scan</code> uses the detection engine above. Both share the placeholder, entropy and masking logic.</div>
+            <div class="term" role="img" aria-label="envguard check output">
+              <div class="term-bar"><i class="t1"></i><i class="t2"></i><i class="t3"></i><span>envguard check .</span></div>
+              <div class="term-body">$ <span class="c1">envguard check</span> .
+sample.env:4:<span class="warn">warning</span>:<span class="c3">duplicate-key</span>:key 'DUPLICATE' appears 2 times; the last value wins
+sample.env:7:<span class="warn">warning</span>:<span class="c3">extra-key</span>:key 'EMPTY_CLEAN' not in the example
+sample.env:9:<span class="err">error</span>:<span class="c3">malformed-line</span>:line contains no '=' separator
+sample.env:10:<span class="warn">warning</span>:<span class="c3">unquoted-hash</span>:value contains '#', may be truncated
+sample.env:13:<span class="warn">warning</span>:<span class="c3">commented-key</span>:key commented out: DISABLED_FEATURE=
+sample.env:0:<span class="warn">warning</span>:<span class="c3">missing-key</span>:key 'REQUIRED_SERVICE' missing
+
+Summary: 11 issue(s) (9 warning(s), 2 error(s))</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ARCHITECTURE ============ -->
+    <section class="section" id="architecture">
+      <div class="wrap">
+        <span class="eyebrow">Architecture</span>
+        <h2>Small modules, clear boundaries, no imports outside the standard library</h2>
+        <div class="pipe" style="margin-top:26px; padding:24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-raised)">
+          <span class="node"><b>cli.py</b> argparse entry</span><span class="arr">→</span>
+          <span class="node"><b>check.py</b> dotenv lint engine</span><span class="arr">→</span>
+          <span class="node"><b>output</b> human/JSON</span><span class="arr">→</span>
+          <span class="arr" aria-hidden="true">|</span>
+          <span class="node"><b>scan.py</b> tree traversal</span><span class="arr">→</span>
+          <span class="node"><b>ignore.py</b> gitignore matcher</span><span class="arr">→</span>
+          <span class="node"><b>rules.py</b> 14 detectors</span><span class="arr">→</span>
+          <span class="node"><b>entropy.py</b> Shannon scoring</span><span class="arr">→</span>
+          <span class="node"><b>output.py</b> findings</span>
+        </div>
+        <div class="ftable" style="margin-top:30px">
+          <table class="ftable">
+            <thead><tr><th>Module</th><th>Responsibility</th></tr></thead>
+            <tbody>
+              <tr><td><code>cli.py</code></td><td>argparse surface, path resolution, exit-code contract (0 / 1 / 2).</td></tr>
+              <tr><td><code>check.py</code></td><td>dotenv parser (quotes, <code>export</code>, comments, duplicates) and example comparison producing <code>CheckIssue</code>s.</td></tr>
+              <tr><td><code>scan.py</code></td><td><code>os.walk</code> traversal, binary &amp; size guards, <code>ScanResult</code> with per-severity / per-detector counts.</td></tr>
+              <tr><td><code>ignore.py</code></td><td>gitignore-style matcher (dir-only, anchored, negations, nested files) plus <code>.envguard-ignore</code> parsing.</td></tr>
+              <tr><td><code>rules.py</code></td><td>the 14 built-in detectors with validators, strong-detector guard spans, placeholder recognition and secret masking.</td></tr>
+              <tr><td><code>entropy.py</code></td><td>Shannon entropy and length-weighted score used to gate generic hex/base64 findings.</td></tr>
+              <tr><td><code>output.py</code></td><td>human-readable tables and stable JSON serialisation for scans.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECURITY ============ -->
+    <section class="section section-soft" id="security">
+      <div class="wrap">
+        <span class="eyebrow">Security model</span>
+        <h2>Designed so the scanner itself cannot leak what it finds</h2>
+        <div class="grid grid-2" style="margin-top:30px">
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">🔍</span>
+            <h3>Masking on by default</h3>
+            <p>Findings display at most the first and last four characters (<code>AKIA****ABCD</code>). Output is safe to paste into issues or CI logs.</p>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">🧱</span>
+            <h3>Zero-runtime-dependency surface</h3>
+            <p>Only the Python standard library. Fewer dependencies means fewer things to compromise and zero supply-chain surprises at scan time.</p>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">⌂</span>
+            <h3>Runs entirely locally</h3>
+            <p>No network calls, no telemetry, no API keys required. Secrets never leave your machine.</p>
+          </article>
+          <article class="card" data-reveal>
+            <span class="ico" aria-hidden="true">⚑</span>
+            <h3>Responsible disclosure</h3>
+            <p>A documented security policy with private advisories and a five-business-day response commitment.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INSTALL ============ -->
+    <section class="section" id="install">
+      <div class="wrap">
+        <span class="eyebrow">Installation</span>
+        <h2>Verified install — Python 3.9 through 3.13, no dependencies</h2>
+        <div class="grid" style="grid-template-columns:1fr 1fr; gap:22px; margin-top:30px">
+          <div class="card">
+            <h3>Source install (verified)</h3>
+<pre><code>git clone https://github.com/honeyamn10-source/envguard.git
+cd envguard
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -e .
+envguard --version</code></pre>
+          </div>
+          <div class="card">
+            <h3>Install from a built distribution</h3>
+<pre><code>python -m build
+pip install dist/envguard-0.1.0-py3-none-any.whl
+envguard --version</code></pre>
+            <p style="font-size:0.9rem;margin-top:12px">Requires <code>setuptools</code> &amp; <code>build</code> for the first command. Runtime <em>has no dependencies</em>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ QUICK START ============ -->
+    <section class="section section-soft" id="quickstart">
+      <div class="wrap">
+        <span class="eyebrow">Quick start</span>
+        <h2>Understand it in under a minute</h2>
+        <div class="grid" style="grid-template-columns:1fr 1fr; gap:22px; margin-top:30px">
+          <div class="card">
+            <h3>Lint an environment file</h3>
+<pre><code># in a project that has .env + .env.example
+envguard check .
+# treat warnings as errors
+envguard check . --strict
+# machine-readable
+envguard check . --json</code></pre>
+          </div>
+          <div class="card">
+            <h3>Scan for leaked secrets</h3>
+<pre><code># scan the current tree
+envguard scan .
+# only critical findings
+envguard scan . --severity critical,high
+# stop at the first finding (CI fast-fail)
+envguard scan . --max-findings 1 --format json</code></pre>
+          </div>
+        </div>
+        <div class="note" style="margin-top:22px"><strong>Exit codes you can gate on:</strong> <code>0</code> everything clean · <code>1</code> findings or lint issues · <code>2</code> usage/I/O error.</div>
+      </div>
+    </section>
+
+    <!-- ============ PRE-COMMIT / CI ============ -->
+    <section class="section" id="ci">
+      <div class="wrap">
+        <span class="eyebrow">CI &amp; pre-commit</span>
+        <h2>Gate commits and pipelines</h2>
+        <div class="grid" style="grid-template-columns:1fr 1fr; gap:22px; margin-top:30px">
+          <div class="card">
+            <h3>pre-commit hooks (bundled)</h3>
+            <p>The repo ships <code>.pre-commit-hooks.yaml</code> with two hooks:</p>
+<pre><code>repos:
+  - repo: https://github.com/honeyamn10-source/envguard
+    rev: v0.1.0
+    hooks:
+      - id: envguard-check   # lint .env files
+      - id: envguard-scan    # scan the staged tree</code></pre>
+          </div>
+          <div class="card">
+            <h3>CI gate</h3>
+<pre><code># GitHub Actions
+- run: pip install -e .
+  working-directory: ./envguard
+- run: envguard scan . --severity critical && envguard check .
+  working-directory: ./app</code></pre>
+            <p style="font-size:0.9rem;margin-top:12px">Findings exist → exit 1 → the job fails and the secret is reviewed instead of merged.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DOCS ============ -->
+    <section class="section section-soft" id="docs">
+      <div class="wrap">
+        <span class="eyebrow">Documentation</span>
+        <h2>CLI reference</h2>
+        <div class="ftable" style="margin-top:24px">
+          <table class="ftable">
+            <thead><tr><th>Command</th><th>Flag</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td rowspan="4"><code>check</code></td><td><code>--example PATH</code></td><td>Compare against an explicit <code>.env.example</code>.</td></tr>
+              <tr><td><code>--allow KEY</code></td><td>Permit an extra key (repeatable).</td></tr>
+              <tr><td><code>--require KEY</code></td><td>Require a non-empty key (repeatable).</td></tr>
+              <tr><td><code>--strict</code> / <code>--json</code></td><td>Warnings become errors / emit JSON.</td></tr>
+              <tr><td rowspan="3"><code>scan</code></td><td><code>--format human|json</code></td><td>Output format.</td></tr>
+              <tr><td><code>--severity LIST</code></td><td>Filter, e.g. <code>critical,high</code>.</td></tr>
+              <tr><td><code>--max-findings N</code></td><td>Stop early, still exit 1.</td></tr>
+              <tr><td><code>--version</code></td><td>—</td><td>Print version.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-ghost" href="https://github.com/honeyamn10-source/envguard/tree/main/docs" target="_blank" rel="noopener">Architecture decision records (docs/)</a>
+          <a class="btn btn-ghost" href="https://github.com/honeyamn10-source/envguard/tree/main/tests" target="_blank" rel="noopener">Test suite (145 tests)</a>
+          <a class="btn btn-ghost" href="https://github.com/honeyamn10-source/envguard/security/advisories/new" target="_blank" rel="noopener">Report a vulnerability</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <h4>envguard</h4>
+          <p class="bio">Zero-dependency CLI that audits <code>.env</code> files and scans repositories for leaked secrets. MIT licensed.</p>
+        </div>
+        <div>
+          <h4>Project</h4>
+          <ul>
+            <li><a href="https://github.com/honeyamn10-source/envguard" target="_blank" rel="noopener">GitHub repository</a></li>
+            <li><a href="https://github.com/honeyamn10-source/envguard/issues" target="_blank" rel="noopener">Issue tracker</a></li>
+            <li><a href="https://github.com/honeyamn10-source/envguard/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a></li>
+            <li><a href="https://github.com/honeyamn10-source/envguard/blob/main/SECURITY.md" target="_blank" rel="noopener">Security policy</a></li>
+            <li><a href="https://github.com/honeyamn10-source/envguard/blob/main/LICENSE" target="_blank" rel="noopener">License (MIT)</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Ecosystem</h4>
+          <ul>
+            <li><a href="https://github.com/honeyamn10-source" target="_blank" rel="noopener">GitHub profile</a></li>
+            <li><a href="https://honeyamn10-source.github.io/" target="_blank" rel="noopener">Project directory</a></li>
+            <li><a href="https://honeyamn10-source.github.io/jawa-quant-computer/" target="_blank" rel="noopener">Jawa Quant Computer</a></li>
+            <li><a href="https://honeyamn10-source.github.io/truagent/" target="_blank" rel="noopener">TruAgent</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Releases</h4>
+          <ul>
+            <li><a href="https://github.com/honeyamn10-source/envguard/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a></li>
+            <li><a href="https://github.com/honeyamn10-source/envguard/releases" target="_blank" rel="noopener">Releases</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-base">
+        <span>Built by <a href="https://github.com/honeyamn10-source" target="_blank" rel="noopener">Bittu Sharma</a> · honeyamn10-source</span>
+        <span>© 2026 Bittu Sharma · MIT License</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/site.js"></script>
+</body>
+</html>
