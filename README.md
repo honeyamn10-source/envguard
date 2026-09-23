@@ -1,3 +1,5 @@
+[![Coverage report](https://img.shields.io/github/actions/workflow/status/honeyamn10-source/envguard/coverage.yml?branch=main&label=coverage)](https://github.com/honeyamn10-source/envguard/actions/workflows/coverage.yml)
+
 ![envguard — Secrets & environment hygiene](docs/assets/cover.svg)
 
 # envguard
@@ -75,3 +77,7 @@ Include the command you ran, your runtime version, a minimal reproduction and th
 ## License
 
 MIT — see [LICENSE](LICENSE). Third-party dependencies retain their own licenses.
+
+## Coverage report
+
+The coverage badge shows whether the coverage workflow passes. Open its latest successful run and download `coverage-report` for measured line coverage and uncovered lines. The badge is a workflow status, not a claimed percentage.
