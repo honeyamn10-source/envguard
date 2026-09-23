@@ -21,6 +21,17 @@ $ pip install pytest
 $ pytest tests -q
 ```
 
+### Windows PowerShell
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e .
+.\.venv\Scripts\python.exe -m pip install pytest
+.\.venv\Scripts\python.exe -m pytest tests -q
+```
+
+Calling the environment’s Python directly does not require changing PowerShell execution policy.
+
 ## Making changes
 
 1. Create a branch: `git checkout -b feat/my-change`.

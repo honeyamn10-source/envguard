@@ -24,7 +24,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install
-        run: python -m pip install --upgrade pip pytest
+        run: python -m pip install --upgrade pip pytest && python -m pip install -e .
 
       - name: Run tests
         run: python -m pytest tests -q
@@ -46,5 +46,9 @@ jobs:
       - name: Version check
         run: envguard --version
 
-      - name: Scan own source tree
-        run: envguard scan . --severity critical || true
+      - name: Scan a clean fixture and validate the installed CLI
+        run: |
+          mkdir -p /tmp/envguard-clean
+          printf 'print("hello")\n' > /tmp/envguard-clean/app.py
+          envguard scan /tmp/envguard-clean --severity critical
+          envguard scan /tmp/envguard-clean --format json

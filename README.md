@@ -1,150 +1,77 @@
-<p align="center">
-  <img src="docs/assets/logo.svg" alt="envguard — audit .env files and scan repositories for leaked secrets" width="100%" />
-</p>
+![envguard — Secrets & environment hygiene](docs/assets/cover.svg)
 
-<p align="center">
-  <strong style="font-size:2rem;color:#22D3EE;">envguard</strong>
-</p>
-<p align="center">
-  <em style="font-size:1.15rem;color:#94A3B8;">Stop secrets before they reach production.</em>
-</p>
+# envguard
 
-<p align="center">
-  <a href="https://honeyamn10-source.github.io/envguard/"><img src="https://img.shields.io/badge/Website-honeyamn10--source.github.io%2Fenvguard-22D3EE?style=for-the-badge&logo=githubpages&logoColor=white" alt="Website"/></a>
-  <a href="https://github.com/honeyamn10-source/envguard/actions"><img src="https://img.shields.io/github/actions/workflow/status/honeyamn10-source/envguard/ci.yml?style=for-the-badge&logo=github" alt="CI"/></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-34D399?style=for-the-badge" alt="MIT license"/></a>
-</p>
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.9+"/>
-  <img src="https://img.shields.io/badge/runtime%20dependencies-0-brightgreen?style=flat-square" alt="Zero runtime dependencies"/>
-  <img src="https://img.shields.io/badge/detectors-14-22D3EE?style=flat-square" alt="14 detectors"/>
-  <img src="https://img.shields.io/badge/pre--commit-2%20hooks-F59E0B?style=flat-square" alt="pre-commit hooks"/>
-</p>
+A small Python CLI for checking environment files and finding likely credentials in a source tree.
 
-**envguard** is a zero-dependency Python CLI that:
+[Project website](https://honeyamn10-source.github.io/envguard/) · [Source](https://github.com/honeyamn10-source/envguard) · [Build results](https://github.com/honeyamn10-source/envguard/actions) · [Issues](https://github.com/honeyamn10-source/envguard/issues)
 
-- **lints `.env` files** against their `.env.example` (`envguard check`), and
-- **scans entire repositories** for leaked secrets (`envguard scan`).
+## What it does
 
-It runs entirely on your machine with no runtime dependencies and never prints a
-full secret — findings are masked by default.
+- **Check environment files.** Compare .env with .env.example for missing, extra, duplicate and empty required values.
+- **Scan the source.** Pattern and entropy checks produce file-and-line findings with severity filters.
+- **Use the result.** Human-readable or JSON scan output; documented exit codes for automation.
 
-[Website](https://honeyamn10-source.github.io/envguard/) · [Documentation](https://github.com/honeyamn10-source/envguard/tree/main/docs) · [Quick start](#quick-start) · [Security](https://github.com/honeyamn10-source/envguard/blob/main/SECURITY.md)
+## Start from source
 
----
-
-## Quick Start
+Python 3.9 or later. No third-party runtime dependencies.
 
 ```bash
 git clone https://github.com/honeyamn10-source/envguard.git
 cd envguard
-python -m venv .venv && source .venv/bin/activate
-pip install -e .
+python -m pip install .
+envguard scan . --severity critical,high
+envguard check . --strict
 ```
+
+For an isolated install, create a virtual environment first:
 
 ```bash
-# Lint the current .env against .env.example
-envguard check .
-
-# Scan the whole repository for leaked secrets
-envguard scan .
+python -m venv .venv
+# Linux/macOS
+source .venv/bin/activate
 ```
 
-`check` and `scan` both return a CI-friendly exit code: `0` clean, `1` issues
-found, `2` usage or I/O error.
+On Windows PowerShell, use `.\.venv\Scripts\Activate.ps1`, or call `.\.venv\Scripts\python.exe` directly if script activation is restricted.
 
----
+### CLI reference
 
-## The two commands
+| Task | Command |
+| --- | --- |
+| Scan likely secrets | `envguard scan .` |
+| Filter severity | `envguard scan . --severity critical,high` |
+| JSON scan report | `envguard scan . --format json` |
+| Compare environment keys | `envguard check . --example .env.example` |
+| Require nonempty key | `envguard check . --require DATABASE_URL` |
+| JSON environment report | `envguard check . --json` |
 
-### `envguard check` — environment file linting
+Exit codes: **0** no findings, **1** findings, **2** invalid input or execution error. Scanning respects supported `.gitignore` and `.envguard-ignore` patterns. There is no `config.yaml` or `envguard.toml` loader; configure supported options through CLI flags.
 
-Compares the real `.env` against `.env.example` and reports:
-
-- missing keys (declared in the example but absent),
-- extra keys not covered by `--allow`,
-- duplicate keys (last value wins),
-- quoted/unquoted values that contain `#` or spaces and may break dotenv parsing,
-- keys commented out on a comment-only line,
-- malformed lines and invalid key names,
-- required keys with empty values.
-
-Flags: `--example PATH` · `--allow KEY` (repeatable) · `--require KEY`
-(repeatable) · `--strict` (promote warnings to errors) · `--json`.
-
-### `envguard scan` — repository secret scanning
-
-Walks a file or tree, respecting `.gitignore`, `.git/info/exclude`, nested
-`.gitignore` files and a root `.envguard-ignore`, then reports findings per line
-in `path:line:severity:detector:description` form.
-
-14 built-in detectors:
-
-| Severity | Detectors |
-|---|---|
-| critical | AWS Access Key ID, AWS Secret Access Key, Stripe secret key, private key material |
-| high | GitHub PAT, Slack token, OpenAI API key, PostgreSQL / Redis / MySQL / MongoDB connection strings, JWT |
-| medium | high-entropy hex, high-entropy base64 (next to a credential key) |
-
-Flags: `--format human|json` · `--severity LEVELS` · `--max-findings N`.
-
-## Detection quality
-
-- **Entropy gating** — generic hex/base64 candidates must clear a length floor
-  and two independent entropy gates (Shannon entropy + length-weighted score).
-- **Placeholder-aware** — `<...>`, `changeme`, `YOUR_KEY_HERE`, `example`,
-  `****` and similar template values are never reported.
-- **Masked findings** — a secret is displayed as `AKIA****ABCD`; export via
-  `--json` still contains the masked preview only.
-- **Suppression** — `.envguard-ignore` supports whole-file and
-  `glob:detector`-specific suppressions.
-
-## pre-commit
-
-Add the bundled hooks to `.pre-commit-config.yaml`:
-
-```yaml
-repos:
-  - repo: https://github.com/honeyamn10-source/envguard
-    rev: v0.1.0
-    hooks:
-      - id: envguard-check   # lint .env files
-      - id: envguard-scan    # scan the staged tree
-```
-
-## Security
-
-- No network calls; the scanner never transmits scanned content.
-- Findings are masked by default so logs and CI output stay clean.
-- Zero runtime dependencies (Python standard library only).
-- Vulnerabilities: private reporting via
-  [security advisory](https://github.com/honeyamn10-source/envguard/security/advisories/new)
-  — see [SECURITY.md](https://github.com/honeyamn10-source/envguard/blob/main/SECURITY.md).
-
-## Architecture
-
-```
-cli.py        argparse entry point, path resolution, exit-code contract
- └─ check.py  dotenv parser + example comparison → CheckIssue[]
- └─ scan.py   os.walk traversal, binary/1MB guards → ScanResult
-     ├─ ignore.py  gitignore-style matcher + .envguard-ignore parsing
-     └─ rules.py   14 detectors, placeholder recognition, secret masking
-         └─ entropy.py  Shannon entropy + weighted score
-output.py     human and JSON formatters
-```
-
-Architectural decisions are recorded in
-[`docs/decisions/`](https://github.com/honeyamn10-source/envguard/tree/main/docs/decisions).
-
-## Development
+## Check your changes
 
 ```bash
-python -m pytest tests -q   # 145 tests across 6 test modules
+python -m pip install pytest
+python -m pytest tests -q
 ```
 
-CI runs the suite on Python 3.9–3.13 plus a CLI smoke test that scans the
-repository's own source tree.
+These are the repository’s checks, not a claim of complete test coverage. See [GitHub Actions](https://github.com/honeyamn10-source/envguard/actions) for the result on a specific commit.
+
+## Scope and limitations
+
+Detection is heuristic. Review findings and rotate any exposed credential. The CLI supports human and JSON scan output; SARIF, JUnit, standalone binaries and Docker images are not supplied here.
+
+## Find your way around
+
+| Source | Purpose |
+| --- | --- |
+| [`envguard/cli.py`](envguard/cli.py) | CLI and exit codes |
+| [`envguard/rules.py`](envguard/rules.py) | Detection rules |
+| [`tests/`](tests/) | Regression fixtures and tests |
+
+## Contributing
+
+Include the command you ran, your runtime version, a minimal reproduction and the expected result in an issue. Remove credentials and personal data from logs. Follow [CONTRIBUTING.md](CONTRIBUTING.md) when proposing a change.
 
 ## License
 
-MIT © 2026 Bittu Sharma
+MIT — see [LICENSE](LICENSE). Third-party dependencies retain their own licenses.
