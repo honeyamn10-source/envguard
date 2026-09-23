@@ -4,6 +4,20 @@
 
 # envguard
 
+<!-- repo-badges:start -->
+<div align="center">
+
+[![Stars](https://img.shields.io/github/stars/honeyamn10-source/envguard?style=flat-square&logo=github&label=Stars)](https://github.com/honeyamn10-source/envguard/stargazers)
+[![Forks](https://img.shields.io/github/forks/honeyamn10-source/envguard?style=flat-square&logo=github&label=Forks)](https://github.com/honeyamn10-source/envguard/forks)
+[![Issues](https://img.shields.io/github/issues/honeyamn10-source/envguard?style=flat-square&logo=github&label=Issues)](https://github.com/honeyamn10-source/envguard/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/honeyamn10-source/envguard?style=flat-square&logo=github&label=Last%20Commit)](https://github.com/honeyamn10-source/envguard/commits/main)
+
+[Repository](https://github.com/honeyamn10-source/envguard) · [Issues](https://github.com/honeyamn10-source/envguard/issues) · [Pull Requests](https://github.com/honeyamn10-source/envguard/pulls) · [Actions](https://github.com/honeyamn10-source/envguard/actions)
+
+</div>
+<!-- repo-badges:end -->
+
+
 A small Python CLI for checking environment files and finding likely credentials in a source tree.
 
 [Project website](https://honeyamn10-source.github.io/envguard/) · [Source](https://github.com/honeyamn10-source/envguard) · [Build results](https://github.com/honeyamn10-source/envguard/actions) · [Issues](https://github.com/honeyamn10-source/envguard/issues)
