@@ -17,6 +17,18 @@
 </div>
 <!-- repo-badges:end -->
 
+<!-- professional-meta:start -->
+<div align="center">
+
+[![ci](https://github.com/honeyamn10-source/envguard/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/honeyamn10-source/envguard/actions/workflows/ci.yml) [![codeql](https://github.com/honeyamn10-source/envguard/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/honeyamn10-source/envguard/actions/workflows/codeql.yml) [![coverage](https://github.com/honeyamn10-source/envguard/actions/workflows/coverage.yml/badge.svg?branch=main)](https://github.com/honeyamn10-source/envguard/actions/workflows/coverage.yml)
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![Pytest](https://img.shields.io/badge/Pytest-0A9EDC?style=flat-square&logo=pytest&logoColor=white) ![Pre-commit](https://img.shields.io/badge/Pre-commit-FAB040?style=flat-square&logo=precommit&logoColor=white)
+
+[Documentation](docs) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md) · [Live Demo](https://honeyamn10-source.github.io/envguard/)
+
+</div>
+<!-- professional-meta:end -->
+
 
 A small Python CLI for checking environment files and finding likely credentials in a source tree.
 
