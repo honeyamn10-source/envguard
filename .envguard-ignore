@@ -1,0 +1,4 @@
+# envguard deliberately commits fake credentials as regression fixtures.
+# These rules keep the secret-scan gate focused on real repository content.
+tests/**:*
+envguard/rules.py:mysql-url

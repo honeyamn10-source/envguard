@@ -16,8 +16,8 @@ jobs:
     env:
       JQC_BROWSER_DRIVER: mock
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
       - name: Install test dependencies
@@ -25,7 +25,7 @@ jobs:
       - name: Measure test coverage
         run: python -m pytest tests --cov=envguard --cov-report=term-missing --cov-report=xml:coverage.xml --cov-report=html:htmlcov
       - name: Upload measured coverage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-report
           path: |
