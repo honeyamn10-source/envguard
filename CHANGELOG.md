@@ -9,22 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Advanced, dependency-free website design system with dark/light themes,
+  persistent theme toggle, responsive mobile navigation, scroll progress,
+  active-section highlighting and reveal-on-scroll states.
+- Interactive workflow explorer with keyboard navigation, a tabbed command
+  console with copy feedback, a searchable/filterable 14-detector catalog,
+  exit-code reference, FAQ accordion and back-to-top control.
 - Opt-in website translation trial using a pinned, hash-verified vendored copy
   of translate.js. Only the public guide container `#docs-content` is sent to
-  Microsoft Translator; commands, buttons, terminal/scan output and identifiers
-  are excluded.
+  Microsoft Translator; commands, buttons, terminal/scan output, search input
+  and identifiers are excluded.
 - `docs/TRANSLATION.md` documenting the endpoint, privacy disclosure, SEO
-  caveat, failure handling and manual test checklist.
-- Static regression checks in `tests/test_website_translation.py`.
+  caveat, failure handling, advanced UI interactions and manual test checklist.
+- Static regression checks in `tests/test_website_translation.py` covering the
+  hardened translation wiring and the advanced UI contracts.
 
 ### Fixed
 
 - Translation scope is re-resolved on every language switch, stale speed-test
   storage cannot re-enable fallback hosts, network failures are detected
-  instead of being reported as success, cached translations are handled, and
-  workflow-explorer text updates are re-translated via a small custom event.
-- Language controls and the privacy notice are styled for the rebuilt website
+  instead of being reported as success, cached translations are handled, the
+  failure path restores the original English DOM, and workflow / command-panel
+  / detector-filter changes use a clean retranslation pass via a small custom
+  event.
+- Language controls and the privacy notice are styled for the advanced website
   at desktop, tablet and small-mobile widths.
+- Detector severity counts now match `envguard/rules.py` (4 critical, 8 high,
+  2 medium), and hidden command/search controls are excluded from translation.
 
 ## [0.1.0] - 2026-09-15
 

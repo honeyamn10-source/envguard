@@ -19,24 +19,29 @@ it has no network calls and no translation code.
    English text.
 
 Only the public guide container `#docs-content` is passed to
-`translate.setDocuments([...])`. It covers the feature overview, interactive
-workflow explanation, setup prose, scope notes and documentation links. The
-hero, navigation, language controls, privacy notice, workflow buttons, command
-block and footer are outside that scope (or explicitly ignored) and are never
-translated.
+`translate.setDocuments([...])`. It covers the advanced workflow explorer,
+CLI reference prose, detector catalog descriptions, setup guidance, scope
+notes and documentation links. The hero, animated scanner illustration,
+navigation, theme toggle, language controls, privacy notice, workflow buttons,
+command/code blocks, detector identifiers, search input, filter chips and
+footer are outside that scope (or explicitly ignored) and are never translated.
 
 ## What is excluded from translation
 
 - `pre` and `code` tags (ignored by translate.js by default, and also listed
   explicitly in `translate.ignore.tag`).
-- The setup `pre`/`code` block, the copy button and the workflow choice buttons
-  are marked with `class="sensitive"` in `website/index.html`.
+- Setup commands, command-console `pre` blocks, illustrative masked findings,
+  detector rule names and exit-code snippets are marked with `class="sensitive"`
+  in `website/index.html`.
+- The workflow buttons, command tabs, copy buttons, filter chips and theme /
+  navigation buttons are `button` elements and ignored by tag.
+- The detector search field (`#detector-search`) is an `input` and ignored by tag.
 - `translate.ignore.class.push('sensitive')` is set before `execute()`.
 - `translate.ignore.text` / `translate.ignore.textRegex` keep the product name,
   URLs, email addresses, cloud token prefixes, private-key headers and similar
   identifiers untranslated.
 - The language selector itself (`#language-controls`) is ignored by id, and
-  `select`, `option`, `button` and `svg` tags are ignored by tag.
+  `select`, `option`, `button`, `svg` and `input` tags are ignored by tag.
 
 If you add a section containing commands, credentials, scan output, tokens or
 identifiers, give it `class="sensitive"` (or keep it outside `#docs-content`).
@@ -86,10 +91,15 @@ The `#docs-content` node is re-resolved on every language switch and passed to
 `setDocuments()` again, so a client-side route change cannot leave
 translate.js watching a detached element.
 
-The workflow explorer swaps its explanation text in place. `site.js` stays
-independent of translate.js and emits `envguard:content-updated`; the
-translation layer listens for that event and re-runs `execute()` only when a
-non-English language is active.
+The workflow explorer swaps its explanation text in place, the command console
+reveals a different static panel, and the detector catalog filters cards with
+the `hidden` attribute. `site.js` stays independent of translate.js and emits
+`envguard:content-updated` for each of those changes. The translation layer
+listens for that event and, when a non-English language is active, runs the
+same clean reset / `changeLanguage()` pass used by a language switch. A plain
+`execute()` can reuse translate.js's stale node map and leave newly revealed
+prose in English, so the reset pass is deliberate. Only current public prose is
+re-read; commands, identifiers and controls are still excluded.
 
 ## Pinned vendor copy
 
@@ -130,28 +140,37 @@ for that; it is not part of this trial.
 Run locally with `python3 -m http.server 8000 --directory website`, then open
 `http://localhost:8000/` and check:
 
-- [ ] Keyboard: Tab reaches the language selector, arrow keys change it, Enter
-      applies it, focus stays visible, and the skip link still works.
-- [ ] Layout: no nav overflow at ~375 px, 768 px and desktop widths.
-- [ ] Selection: English → 简体中文 → English restores the original text.
-- [ ] Dynamic DOM: clicking a workflow choice translates the newly inserted
-      explanation; adding text inside `#docs-content` from the console is also
-      picked up, while adding text outside it is not.
-- [ ] Routes/hash links: clicking `#workflow` and `#start` keeps translation
-      state consistent; clicking a workflow choice replaces the explanation text
-      and the new text is translated. Replacing `#docs-content` from the console
-      and switching language again translates the new node, not the detached one.
+- [ ] Keyboard: Tab reaches the theme toggle, language selector and mobile menu;
+      arrow keys change the language, Enter applies it, focus stays visible, and
+      the skip link still works. Workflow steps and command tabs support arrow
+      keys, Home and End.
+- [ ] Layout: no nav overflow at ~375 px, 768 px and desktop widths; the mobile
+      drawer opens, closes on `Escape` and closes after choosing a link.
+- [ ] Theme: the toggle switches dark/light, persists after reload and updates
+      the browser theme colour.
+- [ ] Selection: English → 简体中文 → Deutsch → English restores the original text.
+- [ ] Dynamic DOM: clicking a workflow choice translates the new explanation.
+      Switching command tabs reveals a new command panel and translates its prose.
+      Typing in the
+      detector search or choosing a severity chip keeps commands and detector
+      identifiers in English while translating the public descriptions.
+- [ ] Routes/hash links: clicking `#workflow`, `#reference`, `#detectors` and
+      `#start` keeps translation state consistent. Replacing `#docs-content`
+      from the console and switching language again translates the new node, not
+      the detached one.
 - [ ] Network tab: no requests before opting in; after opting in, only the
       same-origin vendor script and the pinned Microsoft endpoint appear.
       No `language.json`, `ip.json`, `connectTest.json`, `init.json`,
       `translate.json` or `res.zvo.cn` requests.
-- [ ] Request body: Microsoft receives only public guide prose; the setup
-      commands, button labels, URLs and identifier patterns are absent.
+- [ ] Request body: Microsoft receives only public guide prose; setup commands,
+      command-console code, masked findings, detector rule names, URLs, button
+      labels and the search query are absent.
 - [ ] Failure path: block `edge.microsoft.com` in devtools, pick a language and
       confirm the UI says translation is unavailable and the console has the
       detailed reason.
-- [ ] Sensitive content: setup commands, workflow buttons and the copy button
-      remain in English.
+- [ ] Sensitive content: commands, scanner illustration, detector identifiers,
+      workflow buttons, command tabs, copy buttons, filter chips and the search
+      field remain in English.
 
 ## Moving to a private backend later
 

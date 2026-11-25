@@ -102,6 +102,18 @@
     return 'Translation is temporarily unavailable.';
   }
 
+  /* Restore the original English DOM without changing UI state. Used by both
+     the explicit English selection and the failure path. */
+  function resetTranslationDom() {
+    if (!state.scriptLoaded || !window.translate) return;
+    resolveDocs(window.translate);
+    window.translate.reset({
+      selectLanguageRefreshRender: false,
+      notTranslateTip: false
+    });
+    window.translate.storage.set('to', SOURCE_LANGUAGE);
+  }
+
   function fail(error, scope) {
     var detail = error && error.message ? error.message : String(error);
     logError(scope || 'failure', detail);
@@ -109,10 +121,17 @@
     state.error = detail;
     state.language = 'en';
     state.networkFailure = state.networkFailure || detail;
+    state.executeNumberAtStart = -1;
     setBusy(false);
     if (select) {
       select.value = 'en';
       select.disabled = false;
+    }
+    try {
+      resetTranslationDom();
+    } catch (resetError) {
+      // Keep the original failure as the reported reason; log cleanup errors.
+      logError('failure-reset', resetError);
     }
     setStatus('Translation unavailable. Showing original English.', true);
   }
@@ -195,7 +214,7 @@
     // mark commands, scan output and identifiers with .sensitive in the HTML.
     t.ignore.class.push('sensitive', null);
     t.ignore.id.push('language-controls');
-    t.ignore.tag.push('pre', 'code', 'select', 'option', 'button', 'svg');
+    t.ignore.tag.push('pre', 'code', 'select', 'option', 'button', 'svg', 'input');
     t.ignore.text.push('envguard');
     t.ignore.textRegex.push(
       /(?:AKIA|ASIA)[0-9A-Z]{16}/,
@@ -352,12 +371,7 @@
       return;
     }
     try {
-      resolveDocs(window.translate);
-      window.translate.reset({
-        selectLanguageRefreshRender: false,
-        notTranslateTip: false
-      });
-      window.translate.storage.set('to', SOURCE_LANGUAGE);
+      resetTranslationDom();
       state.language = 'en';
       state.phase = 'ready';
       state.error = null;
@@ -392,22 +406,15 @@
       }
     });
 
-    // The workflow explorer swaps explanation text in place. Site behaviour
-    // stays independent of translate.js: it only announces that public guide
-    // text changed, and we re-run translation when a language is active.
+    // Workflow steps, command panels and detector filters swap public prose in
+    // place. Site behaviour stays independent of translate.js: it only
+    // announces that guide text changed. A plain execute() reuses translate.js's
+    // stale node map, so run the same clean reset/changeLanguage pass used by a
+    // language switch. That re-reads the current English DOM and translates the
+    // newly revealed text without touching commands, identifiers or controls.
     document.addEventListener('envguard:content-updated', function () {
       if (state.language === 'en' || state.phase !== 'ready' || !state.scriptLoaded) return;
-      var t = window.translate;
-      if (!t) return;
-      try {
-        resolveDocs(t);
-        state.networkResults = 0;
-        state.networkFailure = null;
-        t.execute();
-        t.listener.start();
-      } catch (error) {
-        logError('dynamic-content', error);
-      }
+      selectLanguage(state.language);
     });
 
     // Small read-only surface for manual QA / automated checks.

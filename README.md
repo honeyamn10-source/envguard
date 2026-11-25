@@ -35,6 +35,12 @@ A small Python CLI for checking environment files and finding likely credentials
 
 [Project website](https://honeyamn10-source.github.io/envguard/) · [Source](https://github.com/honeyamn10-source/envguard) · [Build results](https://github.com/honeyamn10-source/envguard/actions) · [Issues](https://github.com/honeyamn10-source/envguard/issues)
 
+The website is self-contained and dependency-free: it includes a persistent
+dark/light theme, responsive navigation, an interactive workflow explorer, a
+tabbed command reference, a searchable detector catalog and an opt-in
+translation mode. See [docs/TRANSLATION.md](docs/TRANSLATION.md) for the privacy
+and SEO details.
+
 ## What it does
 
 - **Check environment files.** Compare .env with .env.example for missing, extra, duplicate and empty required values.
