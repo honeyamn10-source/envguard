@@ -1,14 +1,169 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>envguard — Secrets &amp; environment hygiene</title><meta name="description" content="A small Python CLI for checking environment files and finding likely credentials in a source tree."><meta name="theme-color" content="#111619"><meta property="og:title" content="envguard"><meta property="og:description" content="A small Python CLI for checking environment files and finding likely credentials in a source tree."><meta property="og:type" content="website"><link rel="canonical" href="https://honeyamn10-source.github.io/envguard/"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="assets/site.css"><script src="assets/site.js" defer></script></head>
-<body class="theme-terminal" style="--accent:#b8ed79;--bg:#111619;--ink:#f0f2e9;--muted:#aeb8b6;--panel:#192125;--line:#344044;--on-accent:#172014"><a class="skip" href="#main">Skip to content</a><header><div class="wrap nav"><a class="brand" href="#main"><span class="mark" aria-hidden="true"></span>envguard</a><nav aria-label="Primary"><a href="#workflow">Workflow</a><a href="#start">Get started</a><a href="https://github.com/honeyamn10-source/envguard">Source ↗</a></nav></div></header>
-<main id="main" class="wrap"><section class="hero"><div><div class="eyebrow">Secrets &amp; environment hygiene</div><h1>Catch the secret.
-Keep the code.</h1><p>A small Python CLI for checking environment files and finding likely credentials in a source tree.</p><div class="actions"><a class="button primary" href="#start">Get started <span aria-hidden="true">&nbsp;↗</span></a><a class="button" href="https://github.com/honeyamn10-source/envguard#readme">Read the documentation</a></div></div><div class="surface"><div class="surface-top"><span><span class="dot"></span>envguard</span><span>PROJECT OVERVIEW</span></div><div class="visual"><div class="workflow"><div class="workflow-row"><span class="num">01</span>Install from source</div><div class="workflow-row"><span class="num">02</span>Scan your project</div><div class="workflow-row"><span class="num">03</span>Review findings</div></div></div><p class="surface-note">Illustrated workflow · not a live application session</p></div></section>
-<section class="section"><div class="section-head"><div><div class="eyebrow">01 / Inside the project</div><h2>Built around the work.</h2></div><p>Start with the implemented workflow, then follow the source to understand how it works.</p></div><div class="features"><article class="feature"><span class="eyebrow">01</span><h3>Check environment files</h3><p>Compare .env with .env.example for missing, extra, duplicate and empty required values.</p></article><article class="feature"><span class="eyebrow">02</span><h3>Scan the source</h3><p>Pattern and entropy checks produce file-and-line findings with severity filters.</p></article><article class="feature"><span class="eyebrow">03</span><h3>Use the result</h3><p>Human-readable or JSON scan output; documented exit codes for automation.</p></article></div></section>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>envguard — Secrets &amp; environment hygiene</title>
+  <meta name="description" content="A small Python CLI for checking environment files and finding likely credentials in a source tree.">
+  <meta name="theme-color" content="#111619">
+  <meta property="og:title" content="envguard">
+  <meta property="og:description" content="A small Python CLI for checking environment files and finding likely credentials in a source tree.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://honeyamn10-source.github.io/envguard/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css?v=3">
+  <script src="assets/site.js?v=3" defer></script>
+  <script src="assets/translate-init.js?v=3" defer></script>
+</head>
+<body class="theme-terminal" style="--accent:#b8ed79;--bg:#111619;--ink:#f0f2e9;--muted:#aeb8b6;--panel:#192125;--line:#344044;--on-accent:#172014">
+  <a class="skip" href="#main">Skip to content</a>
 
-<section id="workflow" class="section"><div class="section-head"><div><div class="eyebrow">02 / Explore the workflow</div><h2>Three steps to understand it.</h2></div></div><div class="explorer"><div class="choices" role="group" aria-label="Explore project workflow"><button class="choice" data-choice data-title="Check environment files" data-detail="Compare .env with .env.example for missing, extra, duplicate and empty required values." aria-pressed="true"><span>01</span>Install from source</button><button class="choice" data-choice data-title="Scan the source" data-detail="Pattern and entropy checks produce file-and-line findings with severity filters." aria-pressed="false"><span>02</span>Scan your project</button><button class="choice" data-choice data-title="Use the result" data-detail="Human-readable or JSON scan output; documented exit codes for automation." aria-pressed="false"><span>03</span>Review findings</button></div><div class="explanation" aria-live="polite"><h3 id="explore-title">Check environment files</h3><p id="explore-text">Compare .env with .env.example for missing, extra, duplicate and empty required values.</p><a href="https://github.com/honeyamn10-source/envguard#readme">Full setup and implementation ↗</a></div></div></section>
-<section id="start" class="section setup"><div><div class="eyebrow">03 / Run it yourself</div><h2>Start from the source.</h2><p class="muted">Python 3.9 or later. No third-party runtime dependencies.</p><p class="muted">Clone the repository and run these commands from its root. Review the README before connecting external services.</p><a href="https://github.com/honeyamn10-source/envguard">Open repository ↗</a></div><div class="codebox"><div class="code-head"><span>SOURCE CHECKOUT</span><button class="copy" data-copy="setup-code" aria-label="Copy setup commands">Copy</button></div><pre><code id="setup-code">git clone https://github.com/honeyamn10-source/envguard.git
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#main"><span class="mark" aria-hidden="true"></span>envguard</a>
+      <nav aria-label="Primary">
+        <a href="#workflow">Workflow</a>
+        <a href="#start">Get started</a>
+        <a href="https://github.com/honeyamn10-source/envguard">Source ↗</a>
+      </nav>
+      <div class="language-controls" id="language-controls">
+        <label class="sr-only" for="language-select">Documentation language</label>
+        <select id="language-select" class="lang-select" aria-describedby="translation-notice">
+          <option value="en" selected>English (source)</option>
+          <option value="zh-CN">简体中文</option>
+          <option value="ja">日本語</option>
+          <option value="de">Deutsch</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+        </select>
+        <span id="translation-status" class="translation-status" role="status" aria-live="polite"></span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Secrets &amp; environment hygiene</div>
+        <h1>Catch the secret.
+Keep the code.</h1>
+        <p>A small Python CLI for checking environment files and finding likely credentials in a source tree.</p>
+        <div class="actions">
+          <a class="button primary" href="#start">Get started <span aria-hidden="true">&nbsp;↗</span></a>
+          <a class="button" href="https://github.com/honeyamn10-source/envguard#readme">Read the documentation</a>
+        </div>
+      </div>
+      <div class="surface">
+        <div class="surface-top"><span><span class="dot"></span>envguard</span><span>PROJECT OVERVIEW</span></div>
+        <div class="visual">
+          <div class="workflow">
+            <div class="workflow-row"><span class="num">01</span>Install from source</div>
+            <div class="workflow-row"><span class="num">02</span>Scan your project</div>
+            <div class="workflow-row"><span class="num">03</span>Review findings</div>
+          </div>
+        </div>
+        <p class="surface-note">Illustrated workflow · not a live application session</p>
+      </div>
+    </section>
+
+    <p class="translation-notice" id="translation-notice">
+      English is the source language. Selecting another language sends only the public guide text below to
+      <strong>Microsoft Translator</strong>. Commands, code blocks, scan results and identifiers are excluded.
+      The envguard CLI itself remains fully offline.
+    </p>
+
+    <div id="docs-content">
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">01 / Inside the project</div>
+            <h2>Built around the work.</h2>
+          </div>
+          <p>Start with the implemented workflow, then follow the source to understand how it works.</p>
+        </div>
+        <div class="features">
+          <article class="feature">
+            <span class="eyebrow">01</span>
+            <h3>Check environment files</h3>
+            <p>Compare .env with .env.example for missing, extra, duplicate and empty required values.</p>
+          </article>
+          <article class="feature">
+            <span class="eyebrow">02</span>
+            <h3>Scan the source</h3>
+            <p>Pattern and entropy checks produce file-and-line findings with severity filters.</p>
+          </article>
+          <article class="feature">
+            <span class="eyebrow">03</span>
+            <h3>Use the result</h3>
+            <p>Human-readable or JSON scan output; documented exit codes for automation.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow" class="section">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">02 / Explore the workflow</div>
+            <h2>Three steps to understand it.</h2>
+          </div>
+        </div>
+        <div class="explorer">
+          <div class="choices" role="group" aria-label="Explore project workflow">
+            <button class="choice sensitive" data-choice data-title="Check environment files" data-detail="Compare .env with .env.example for missing, extra, duplicate and empty required values." aria-pressed="true"><span>01</span>Install from source</button>
+            <button class="choice sensitive" data-choice data-title="Scan the source" data-detail="Pattern and entropy checks produce file-and-line findings with severity filters." aria-pressed="false"><span>02</span>Scan your project</button>
+            <button class="choice sensitive" data-choice data-title="Use the result" data-detail="Human-readable or JSON scan output; documented exit codes for automation." aria-pressed="false"><span>03</span>Review findings</button>
+          </div>
+          <div class="explanation" aria-live="polite">
+            <h3 id="explore-title">Check environment files</h3>
+            <p id="explore-text">Compare .env with .env.example for missing, extra, duplicate and empty required values.</p>
+            <a href="https://github.com/honeyamn10-source/envguard#readme">Full setup and implementation ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="start" class="section setup">
+        <div>
+          <div class="eyebrow">03 / Run it yourself</div>
+          <h2>Start from the source.</h2>
+          <p class="muted">Python 3.9 or later. No third-party runtime dependencies.</p>
+          <p class="muted">Clone the repository and run these commands from its root. Review the README before connecting external services.</p>
+          <a href="https://github.com/honeyamn10-source/envguard">Open repository ↗</a>
+        </div>
+        <div class="codebox">
+          <div class="code-head"><span>SOURCE CHECKOUT</span><button class="copy sensitive" data-copy="setup-code" aria-label="Copy setup commands">Copy</button></div>
+          <pre class="sensitive"><code id="setup-code">git clone https://github.com/honeyamn10-source/envguard.git
 cd envguard
 python -m pip install .
 envguard scan . --severity critical,high
-envguard check . --strict</code></pre></div></section>
-<section class="section detail-grid"><div><div class="eyebrow">04 / Know the scope</div><h2>Clear expectations.</h2><p class="scope">Detection is heuristic. Review findings and rotate any exposed credential. The CLI supports human and JSON scan output; SARIF, JUnit, standalone binaries and Docker images are not supplied here.</p><p class="muted">Check the latest results in <a href="https://github.com/honeyamn10-source/envguard/actions">GitHub Actions</a>. A passing automated check covers its tested paths, not every real-world integration.</p></div><div><div class="eyebrow">Keep exploring</div><ul class="doc-links"><li><a href="https://github.com/honeyamn10-source/envguard/blob/main/envguard/cli.py">CLI and exit codes<span aria-hidden="true">↗</span></a></li><li><a href="https://github.com/honeyamn10-source/envguard/blob/main/envguard/rules.py">Detection rules<span aria-hidden="true">↗</span></a></li><li><a href="https://github.com/honeyamn10-source/envguard/tree/main/tests/">Regression fixtures and tests<span aria-hidden="true">↗</span></a></li><li><a href="https://github.com/honeyamn10-source/envguard/issues">Report a reproducible issue<span aria-hidden="true">↗</span></a></li></ul></div></section></main><footer><div class="wrap"><span>envguard · Maintained by honeyamn10-source</span><a href="https://github.com/honeyamn10-source/envguard/blob/main/LICENSE">License & source</a></div></footer></body></html>
+envguard check . --strict</code></pre>
+        </div>
+      </section>
+
+      <section class="section detail-grid">
+        <div>
+          <div class="eyebrow">04 / Know the scope</div>
+          <h2>Clear expectations.</h2>
+          <p class="scope">Detection is heuristic. Review findings and rotate any exposed credential. The CLI supports human and JSON scan output; SARIF, JUnit, standalone binaries and Docker images are not supplied here.</p>
+          <p class="muted">Check the latest results in <a href="https://github.com/honeyamn10-source/envguard/actions">GitHub Actions</a>. A passing automated check covers its tested paths, not every real-world integration.</p>
+        </div>
+        <div>
+          <div class="eyebrow">Keep exploring</div>
+          <ul class="doc-links">
+            <li><a href="https://github.com/honeyamn10-source/envguard/blob/main/envguard/cli.py">CLI and exit codes<span aria-hidden="true">↗</span></a></li>
+            <li><a href="https://github.com/honeyamn10-source/envguard/blob/main/envguard/rules.py">Detection rules<span aria-hidden="true">↗</span></a></li>
+            <li><a href="https://github.com/honeyamn10-source/envguard/tree/main/tests/">Regression fixtures and tests<span aria-hidden="true">↗</span></a></li>
+            <li><a href="https://github.com/honeyamn10-source/envguard/issues">Report a reproducible issue<span aria-hidden="true">↗</span></a></li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>envguard · Maintained by honeyamn10-source</span>
+      <a href="https://github.com/honeyamn10-source/envguard/blob/main/LICENSE">License &amp; source</a>
+    </div>
+  </footer>
+</body>
+</html>

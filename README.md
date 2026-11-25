@@ -25,7 +25,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![Pytest](https://img.shields.io/badge/Pytest-0A9EDC?style=flat-square&logo=pytest&logoColor=white) ![Pre-commit](https://img.shields.io/badge/Pre-commit-FAB040?style=flat-square&logo=precommit&logoColor=white)
 
-[Documentation](docs) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md) · [Live Demo](https://honeyamn10-source.github.io/envguard/)
+[Documentation](docs) · [Translation](docs/TRANSLATION.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md) · [Live Demo](https://honeyamn10-source.github.io/envguard/)
 
 </div>
 <!-- professional-meta:end -->

@@ -1,0 +1,10 @@
+{
+  "name": "translate.js",
+  "version": "4.1.0.20260526",
+  "sha256": "89ec5abd84cac6c17f5133d5b4ff87798c0b67f2e48cffcebd20fa6bd9aa6cca",
+  "source": "https://res.zvo.cn/translate/translate.js",
+  "upstream": "https://github.com/xnx3/translate",
+  "license": "MIT",
+  "license_file": "LICENSE.translate.txt",
+  "notes": "Vendored for the opt-in website translation trial. Do not update without re-auditing endpoints and updating website/assets/translate-init.js and tests/test_website_translation.py."
+}

@@ -5,6 +5,27 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Opt-in website translation trial using a pinned, hash-verified vendored copy
+  of translate.js. Only the public guide container `#docs-content` is sent to
+  Microsoft Translator; commands, buttons, terminal/scan output and identifiers
+  are excluded.
+- `docs/TRANSLATION.md` documenting the endpoint, privacy disclosure, SEO
+  caveat, failure handling and manual test checklist.
+- Static regression checks in `tests/test_website_translation.py`.
+
+### Fixed
+
+- Translation scope is re-resolved on every language switch, stale speed-test
+  storage cannot re-enable fallback hosts, network failures are detected
+  instead of being reported as success, cached translations are handled, and
+  workflow-explorer text updates are re-translated via a small custom event.
+- Language controls and the privacy notice are styled for the rebuilt website
+  at desktop, tablet and small-mobile widths.
+
 ## [0.1.0] - 2026-09-15
 
 ### Added
