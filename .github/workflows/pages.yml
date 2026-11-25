@@ -28,6 +28,9 @@ jobs:
         with:
           path: website
           artifact_name: github-pages
+      # deploy-pages can briefly see zero artifacts immediately after upload.
+      - name: Wait for artifact indexing
+        run: sleep 10
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

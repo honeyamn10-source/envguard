@@ -9,7 +9,8 @@ on:
 jobs:
   test:
     name: Python ${{ matrix.python }}
-    runs-on: ubuntu-latest
+    # Python 3.9 is not available on the newest Ubuntu runner image.
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
